@@ -10,11 +10,7 @@
 
     Array.isArray = Array.isArray || isType("Array");
     function _typeError(msg) {
-       try {
-        throw new TypeError(msg);
-       } catch(e) {
-            console.log(e);
-        }
+       throw new TypeError(msg);
     }
     function _checkMethod(o) {
         if(!this) {
