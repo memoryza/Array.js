@@ -202,7 +202,7 @@
             for(var i = len - 1; i >= 0; i--) {
                 if(this.hasOwnProperty(i)) {
                     if(hasInitVal) {
-                        value = fun.call(null, value, this[i], i, this);
+                        value = fun(value, this[i], i, this);
                     } else {
                         value = this[i];
                         hasInitVal = true;
