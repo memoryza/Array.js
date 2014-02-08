@@ -5,23 +5,28 @@
             return {}.toString.call(obj) == "[object " + type + "]"
         }
     }
-    var isFunction = isType("Function");
+    var isFunction = isType("Function"),
+        _arrProtoCache = Array.prototype;
 
     Array.isArray = Array.isArray || isType("Array");
     function _typeError(msg) {
-       throw new TypeError(msg);
+       try {
+        throw new TypeError(msg);
+       } catch(e) {
+            console.log(e);
+        }
     }
-    function _checkArrayMethod(fun) {
+    function _checkMethod(o) {
         if(!this) {
             _typeError("this is null or not defined");
         }
-        if(obj === undefined) {
-            _typeError(obj + 'is not defined');
-        } else if(!isFunction(fun)) {
-            _typeError(fun  + ' is not a function');
+        if(o === undefined) {
+            _typeError(o + " is not defined");
+        } else if(!o && !isFunction(o)) {
+            _typeError(o  + " is not a function");
         }
     }
-    
+
     function _compareObject(obj1, obj2) {
         if(typeof obj1 === 'object' && typeof obj2 === "object") {
             for(var i in obj1) {
@@ -39,9 +44,9 @@
             return obj1 === obj2;
         }
     }
-    if(!isFunction(Array.prototype.every)) {
-        Array.prototype.every = function(fun, thisArg) {
-            _checkArrayMethod.call(this, fun);
+    if(!isFunction(_arrProtoCache.every)) {
+        _arrProtoCache.every = function(fun, thisArg) {
+            _checkMethod.call(this, fun);
 
             var O = Object(this),
                 len = O.length >>> 0;
@@ -57,9 +62,9 @@
         }
     }
 
-    if(!isFunction(Array.prototype.some)) {
-        Array.prototype.some = function(fun, thisArg) {
-            _checkArrayMethod.call(this, fun);
+    if(!isFunction(_arrProtoCache.some)) {
+        _arrProtoCache.some = function(fun, thisArg) {
+            _checkMethod.call(this, fun);
 
             var O = Object(this),
                 len = O.length >>> 0;
@@ -75,9 +80,9 @@
         }
     }
 
-    if(!isFunction(Array.prototype.forEach)) {
-        Array.prototype.forEach = function(fun, thisArg) {
-            _checkArrayMethod.call(this, fun);
+    if(!isFunction(_arrProtoCache.forEach)) {
+        _arrProtoCache.forEach = function(fun, thisArg) {
+            _checkMethod.call(this, fun);
 
             thisArg = thisArg || null;
             var O = Object(this),
@@ -88,9 +93,9 @@
         }
     }
 
-    if (!isFunction(Array.prototype.filter)) {
-        Array.prototype.filter =  function(fun, thisArg) {
-            _checkArrayMethod.call(this, fun);
+    if (!isFunction(_arrProtoCache.filter)) {
+        _arrProtoCache.filter =  function(fun, thisArg) {
+            _checkMethod.call(this, fun);
 
             thisArg = thisArg || null;
             var O = Object(this),
@@ -105,9 +110,9 @@
             return res;
         }
     }
-    if(!isFunction(Array.prototype.map)) {
-        Array.prototype.map = function(fun, thisArg) {
-            _checkArrayMethod.call(this, fun);
+    if(!isFunction(_arrProtoCache.map)) {
+        _arrProtoCache.map = function(fun, thisArg) {
+            _checkMethod.call(this, fun);
 
             thisArg = thisArg || null;
             var O = Object(this),
@@ -121,9 +126,9 @@
             return res;
         }
     }
-    if(!isFunction(Array.prototype.reduce)) {
-        Array.prototype.reduce = function(fun, initVal) {
-            _checkArrayMethod.call(this, fun);
+    if(!isFunction(_arrProtoCache.reduce)) {
+        _arrProtoCache.reduce = function(fun, initVal) {
+            _checkMethod.call(this, fun);
             var len = this.length >>> 0,
                 hasInitVal = false,
                 value;
@@ -147,50 +152,9 @@
             return value;
         }
     }
-
-    if(!isFunction(Array.prototype.indexOf)) {
-        Array.prototype.indexOf = function(val) {
-            _checkArrayMethod.call(this, val);
-
-            var O = new Object(this),
-                len =  O.length >>> 0,
-                index = -1;
-            
-            for(var i  = 0; i < len;  i++) {
-                if(i in O) {
-                    if(!_compareObject(O[i], val)) {
-                        break;
-                    }
-                    index = i;
-                    break;
-                }
-            }
-            return index;
-        }
-    }
-
-    if(!isFunction(Array.prototype.lastIndexOf)) {
-        Array.prototype.lastIndexOf = function(val) {
-            _checkArrayMethod.call(this, val);
-
-            var O = Object(this),
-                len  = O.length >>> 0,
-                index = -1;
-            for(var i = len;i >= 0; i--) {
-                if(i in O) {
-                    if(!_compareObject(O[i], val)) {
-                        break;
-                    }
-                    index = i;
-                    break;
-                }
-            }
-        }
-    }
-
-    if(!isFunction(Array.prototype.reduceRight)) {
-        Array.prototype.reduceRight = function(fun, initVal) {
-            _checkArrayMethod.call(this, fun);
+    if(!isFunction(_arrProtoCache.reduceRight)) {
+        _arrProtoCache.reduceRight = function(fun, initVal) {
+            _checkMethod.call(this, fun);
 
             var len = this.length >>> 0,
                 hasInitVal = false,
@@ -210,6 +174,46 @@
                 }
             }
             return value;
+        }
+    }
+
+    if(!isFunction(_arrProtoCache.indexOf)) {
+        _arrProtoCache.indexOf = function(val) {
+            _checkMethod.call(this, val);
+
+            var O = new Object(this),
+                len =  O.length >>> 0,
+                index = -1;
+            for(var i  = 0; i < len;  i++) {
+                if(i in O) {
+                    if(!_compareObject(O[i], val)) {
+                        continue;
+                    }
+                    index = i;
+                    break;
+                }
+            }
+            return index;
+        }
+    }
+
+    if(!isFunction(_arrProtoCache.lastIndexOf)) {
+        _arrProtoCache.lastIndexOf = function(val) {
+            _checkMethod.call(this, val);
+
+            var O = Object(this),
+                len  = O.length >>> 0,
+                index = -1;
+            for(var i = len;i >= 0; i--) {
+                if(i in O) {
+                    if(!_compareObject(O[i], val)) {
+                        continue;
+                    }
+                    index = i;
+                    break;
+                }
+            }
+            return index;
         }
     }
 })();

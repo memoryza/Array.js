@@ -1,0 +1,45 @@
+<script src="Array.js"></script>
+<script>
+    var foo1 = [1,2,3,4],
+        foo2 = [1,2,3,4,{x:1},2],
+        slog = function(msg) {
+            return console && typeof console.log === "function" ? console.log(msg) : alert(msg);
+        };
+    /* every */
+    slog(foo1.every(function(val, key) {
+        return val > 0;
+    }));
+    slog(foo2.every(function(val, key) {
+        return val > 0;
+    }));
+    /* some */
+     slog(foo1.some(function(val, key) {
+        return val > 1;
+    }));
+    slog(foo2.some(function(val, key) {
+        return val > 5;
+    }));
+    /* forEach */
+    foo1.forEach(function(value, key) {
+        slog(value + 1);
+    });
+    /* filter */
+    slog(foo2.filter(function(value, key) {
+        return value%2;
+    }));
+    /* map */
+    slog(foo1.map(Math.sqrt));
+    /* reduce */
+    slog(foo1.reduce(function(prev, val) {
+        return prev + val;
+    }));
+    /* reduceRight */
+    slog(foo1.reduceRight(function(prev, val) {
+        return prev + val;
+    }));
+    /* indexOf */
+    slog(foo2.indexOf({x:1}));
+    /* lastIndexOf */
+    slog(foo2.indexOf(2));
+    slog(foo2.lastIndexOf(2));
+</script>
