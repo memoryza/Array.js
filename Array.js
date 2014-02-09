@@ -6,6 +6,7 @@
         }
     }
     var isFunction = isType("Function"),
+        isObject = isType("Object"),
         _arrProtoCache = Array.prototype;
 
     Array.isArray = Array.isArray || isType("Array");
@@ -24,10 +25,10 @@
     }
 
     function _compareObject(obj1, obj2) {
-        if(typeof obj1 === 'object' && typeof obj2 === "object") {
+        if(isObject(obj1) && isObject(obj2)) {
             for(var i in obj1) {
-                if(typeof obj1[i] === "object" && typeof obj[2] === "object") {
-                    if(!compareObject(obj1[i], obj2[2])) {
+                if(isObject(obj1[i]) && isObject(obj2[i])) {
+                    if(!compareObject(obj1[i], obj2[i])) {
                         return false;
                     }
                 }
